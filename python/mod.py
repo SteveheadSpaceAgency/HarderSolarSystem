@@ -46,18 +46,18 @@ def generate_opm_compatability_config(scale, compatability_path):
 			body.rotate_orbit(x_rot=axial_tilt)
 			orbit_module = Module("@Orbit")
 			if scale != 1:
-				orbit_module.add_parameter("semiMajorAxis = %d" % round(body.a))
-			orbit_module.add_parameter("inclination = %s" % format_float(body.i))
-			orbit_module.add_parameter("longitudeOfAscendingNode = %s" % format_float(body.o))
-			orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
+				orbit_module.add_parameter("@semiMajorAxis = %d" % round(body.a))
+			orbit_module.add_parameter("@inclination = %s" % format_float(body.i))
+			orbit_module.add_parameter("@longitudeOfAscendingNode = %s" % format_float(body.o))
+			orbit_module.add_parameter("@argumentOfPeriapsis = %s" % format_float(body.w))
 			body_module.add_child(orbit_module)
 			
 		if scale != 1 and not body.is_potato:
 			properties_module = Module("@Properties")
 			properties_module.add_parameter("-mass = dummy")
-			properties_module.add_parameter("radius = %d" % round(body.r))
+			properties_module.add_parameter("@radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
-				properties_module.add_parameter("rotationPeriod = %s" % format_float(body.rot))
+				properties_module.add_parameter("@rotationPeriod = %s" % format_float(body.rot))
 			body_module.add_child(properties_module)
 		
 		if scale != 1 and body.has_rings:
