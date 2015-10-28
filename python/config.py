@@ -22,6 +22,10 @@ class Module(object):
 			parent = parent.parent
 		return depth
 		
+	def write_to_file(self, file):
+		with open(file, 'w') as f:
+			f.write(str(self))
+		
 	def __str__(self):
 		depth = self.determine_depth()
 		t = "\t" * depth

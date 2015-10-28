@@ -50,8 +50,7 @@ def generate_kopernicus_config(scale, mod_path):
 		
 		main_module.add_child(body_module)
 	
-	with open(config_path, 'w') as config_f:
-		config_f.write(str(main_module))
+	main.module.write_to_file(config_path)
 		
 def generate_space_center_module(scale):
 	ksc_module = Module("SpaceCenter")
