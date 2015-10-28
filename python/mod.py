@@ -6,7 +6,9 @@ from bodies import PlanetaryBody, bodies
 base_directory_format = "%dx"
 mod_name_format = "HarderSolarSystem-%dx"
 kopernicus_config_name = "HSSKopernicus.cfg"
+remote_tech_compatability_config_name = "RemoteTech_HSS.cfg"
 game_data_directory = "GameData"
+compatability_directory = "Compatability"
 axial_tilt = 23.4392811
 
 def generate_mod(scale, directory):
@@ -16,6 +18,14 @@ def generate_mod(scale, directory):
 	if not os.path.exists(mod_path):
 		os.makedirs(mod_path)
 	generate_kopernicus_config(scale, mod_path)
+	if scale != 1:
+		generate_compatability_configs(scale, mod_path)
+
+def generate_compatability_configs(scale, mod_path):
+	compatability_path = os.path.join(mod_path, compatability_directory)
+	if not os.path.exists(compatability_path):
+		os.makedirs(compatability_path)
+	generate_remote_tech_compatability_config(scale, compatability_path)
 
 def generate_kopernicus_config(scale, mod_path):
 	config_path = os.path.join(mod_path, kopernicus_config_name)
@@ -50,8 +60,22 @@ def generate_kopernicus_config(scale, mod_path):
 		
 		main_module.add_child(body_module)
 	
-	main.module.write_to_file(config_path)
+	main_module.write_to_file(config_path)
 		
+def generate_remote_tech_compatability_config(scale, compatability_path):
+	config_path = os.path.join(compatability_path, remote_tech_compatability_config_name)
+	main_module = Module("@PART[*]:HAS[@MODULE[ModuleRTAntenna],!MODULE[ModuleCommand]]:NEEDS[RemoteTech]:Final")
+	
+	antenna_module = Module("@MODULE[ModuleRTAntenna]")
+	antenna_module.add_parameter("@Mode0DishRange *= %f" % scale)
+	antenna_module.add_parameter("@Mode1DishRange *= %f" % scale)
+	antenna_module.add_parameter("@Mode0OmniRange *= %f" % scale)
+	antenna_module.add_parameter("@Mode1OmniRange *= %f" % scale)
+	
+	main_module.add_child(antenna_module)
+	main_module.write_to_file(config_path)
+	
+
 def generate_space_center_module(scale):
 	ksc_module = Module("SpaceCenter")
 	ksc_module.add_parameter("latitude = 28.608389")
