@@ -3,11 +3,12 @@ from physics import Vector
 
 
 class Body(object):
-	def __init__(self, name, r, rot="TL", is_potato=False):
+	def __init__(self, name, r, rot="TL", is_potato=False, has_rings=False):
 		self.name = name
 		self.r = r
 		self.rot = rot
 		self.is_potato = is_potato
+		self.has_rings = has_rings
 		
 	@property
 	def is_tidally_locked(self):
@@ -154,4 +155,22 @@ bodies = [
 	PlanetaryBody(name="Bop", r=65000, a=128500000, i=15, o=10, w=25, is_potato=True),
 	PlanetaryBody(name="Pol", r=44000, a=179890000, i=4.25, o=2, w=15, is_potato=True),
 	PlanetaryBody(name="Eeloo", r=210000, a=90118820000, i=6.15, o=50, w=260, rot=19460),
+]
+
+opm_bodies = [
+	PlanetaryBody(name="Sarnus", r=5300000, a=125798522368, i=2.02, o=184, w=0, rot=28500, has_rings=True),
+	PlanetaryBody(name="Hale", r=6000, a=10488231, i=1, o=55, w=0, is_potato=True),
+	PlanetaryBody(name="Ovok", r=26000, a=12169413, i=1.5, o=55, w=0),
+	PlanetaryBody(name="Eeloo", r=210000, a=19105978, i=2.3, o=55, w=260),
+	PlanetaryBody(name="Slate", r=540000, a=42592946, i=2.3, o=55, w=0),
+	PlanetaryBody(name="Tekto", r=280000, a=97355304, i=9.4, o=55, w=0),	
+	PlanetaryBody(name="Urlum", r=2177000, a=254317012787, i=0.64, o=61, w=0, rot=41000, has_rings=True),
+	PlanetaryBody(name="Polta", r=220000, a=11727895, i=2.45, o=40, w=60),
+	PlanetaryBody(name="Priax", r=74000, a=11727895, i=2.45, o=40, w=0, is_potato=True),
+	PlanetaryBody(name="Wal", r=370000, a=67553668, i=1.9, o=40, w=0),
+	PlanetaryBody(name="Tal", r=22000, a=3109163, i=1.9, o=40, w=0, is_potato=True),
+	PlanetaryBody(name="Neidon", r=2145000, a=409355191706, i=1.27, o=259, w=0, rot=40250),
+	PlanetaryBody(name="Thatmo", r=286000, a=32300895, i=161.1, o=66, w=0),
+	PlanetaryBody(name="Nissee", r=30000, a=487743514, i=29.56, o=66, w=0),
+	PlanetaryBody(name="Plock", r=189000, a=535833706086, i=6.15, o=260, w=50, rot=106300),
 ]

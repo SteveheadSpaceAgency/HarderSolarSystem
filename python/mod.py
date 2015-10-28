@@ -1,12 +1,13 @@
 import os, copy, math
 from config import Module, format_float
-from bodies import PlanetaryBody, bodies
+from bodies import PlanetaryBody, bodies, opm_bodies
 
 # settings
 base_directory_format = "%sx"
 mod_name_format = "HarderSolarSystem-%sx"
 kopernicus_config_name = "HSSKopernicus.cfg"
 remote_tech_compatability_config_name = "RemoteTech_HSS.cfg"
+opm_compatability_config_name = "OuterPlanetsMod_HSS.cfg"
 game_data_directory = "GameData"
 compatability_directory = "Compatability"
 axial_tilt = 23.4392811
@@ -18,14 +19,59 @@ def generate_mod(scale, directory):
 	if not os.path.exists(mod_path):
 		os.makedirs(mod_path)
 	generate_kopernicus_config(scale, mod_path)
-	if scale != 1:
-		generate_compatability_configs(scale, mod_path)
+	generate_compatability_configs(scale, mod_path)
 
 def generate_compatability_configs(scale, mod_path):
 	compatability_path = os.path.join(mod_path, compatability_directory)
 	if not os.path.exists(compatability_path):
 		os.makedirs(compatability_path)
-	generate_remote_tech_compatability_config(scale, compatability_path)
+	if scale != 1:
+		generate_remote_tech_compatability_config(scale, compatability_path)
+	generate_opm_compatability_config(scale, compatability_path)
+	
+def generate_opm_compatability_config(scale, compatability_path):
+	config_path = os.path.join(compatability_path, opm_compatability_config_name)
+	this_bodies = copy.deepcopy(opm_bodies)
+	
+	main_module = Module("@Kopernicus:AFTER[OPM]")
+	
+	for body in this_bodies:
+		if scale != 1:
+			body.rescale(scale)
+		body_module = Module("@Body[%s]" % body.name)
+		
+		body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
+		
+		if isinstance(body, PlanetaryBody):
+			body.rotate_orbit(x_rot=axial_tilt)
+			orbit_module = Module("@Orbit")
+			if scale != 1:
+				orbit_module.add_parameter("semiMajorAxis = %d" % round(body.a))
+			orbit_module.add_parameter("inclination = %s" % format_float(body.i))
+			orbit_module.add_parameter("longitudeOfAscendingNode = %s" % format_float(body.o))
+			orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
+			body_module.add_child(orbit_module)
+			
+		if scale != 1 and not body.is_potato:
+			properties_module = Module("@Properties")
+			properties_module.add_parameter("-mass = dummy")
+			properties_module.add_parameter("radius = %d" % round(body.r))
+			if not body.is_tidally_locked:
+				properties_module.add_parameter("rotationPeriod = %s" % format_float(body.rot))
+			body_module.add_child(properties_module)
+		
+		if scale != 1 and body.has_rings:
+			rings_scale = format_float(1.0 / scale)
+			rings_module = Module("@Rings")
+			ring_module = Module("@Ring")
+			ring_module.add_parameter("@outerRadius *= %s" % rings_scale)
+			ring_module.add_parameter("@innerRadius  *= %s" % rings_scale)
+			rings_module.add_child(ring_module)
+			body_module.add_child(rings_module)
+		
+		main_module.add_child(body_module)
+	
+	main_module.write_to_file(config_path)
 
 def generate_kopernicus_config(scale, mod_path):
 	config_path = os.path.join(mod_path, kopernicus_config_name)
@@ -36,7 +82,10 @@ def generate_kopernicus_config(scale, mod_path):
 	for body in this_bodies:
 		if scale != 1:
 			body.rescale(scale)
-		body_module = Module("@Body[%s]" % body.name)
+		if body.name != "Eeloo":
+			body_module = Module("@Body[%s]" % body.name)
+		else:
+			body_module = Module("@Body[%s]:NEEDS[!OPM]" % body.name)
 			
 		body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
@@ -50,12 +99,12 @@ def generate_kopernicus_config(scale, mod_path):
 			orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
 			body_module.add_child(orbit_module)
 		
-		properties_module = Module("@Properties")
 		if scale != 1 and not body.is_potato:
+			properties_module = Module("@Properties")
 			properties_module.add_parameter("radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
 				properties_module.add_parameter("rotationPeriod = %s" % format_float(body.rot))
-		body_module.add_child(properties_module)
+			body_module.add_child(properties_module)
 		
 		if body.name == "Kerbin":
 			body_module.add_child(generate_space_center_module(scale))
