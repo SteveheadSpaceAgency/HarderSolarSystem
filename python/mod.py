@@ -1,10 +1,10 @@
 import os, copy, math
-from config import Module
+from config import Module, format_float
 from bodies import PlanetaryBody, bodies
 
 # settings
-base_directory_format = "%dx"
-mod_name_format = "HarderSolarSystem-%dx"
+base_directory_format = "%sx"
+mod_name_format = "HarderSolarSystem-%sx"
 kopernicus_config_name = "HSSKopernicus.cfg"
 remote_tech_compatability_config_name = "RemoteTech_HSS.cfg"
 game_data_directory = "GameData"
@@ -12,9 +12,9 @@ compatability_directory = "Compatability"
 axial_tilt = 23.4392811
 
 def generate_mod(scale, directory):
-	base_path = os.path.join(directory, base_directory_format % scale)
+	base_path = os.path.join(directory, base_directory_format % format_float(scale))
 	game_data_path = os.path.join(base_path, game_data_directory)
-	mod_path = os.path.join(game_data_path, mod_name_format % scale)
+	mod_path = os.path.join(game_data_path, mod_name_format % format_float(scale))
 	if not os.path.exists(mod_path):
 		os.makedirs(mod_path)
 	generate_kopernicus_config(scale, mod_path)
@@ -43,16 +43,16 @@ def generate_kopernicus_config(scale, mod_path):
 			orbit_module = Module("@Orbit")
 			if scale != 1:
 				orbit_module.add_parameter("semiMajorAxis = %d" % round(body.a))
-			orbit_module.add_parameter("inclination = %f" % body.i)
-			orbit_module.add_parameter("longitudeOfAscendingNode = %f" % body.o)
-			orbit_module.add_parameter("argumentOfPeriapsis = %f" % body.w)
+			orbit_module.add_parameter("inclination = %s" % format_float(body.i))
+			orbit_module.add_parameter("longitudeOfAscendingNode = %s" % format_float(body.o))
+			orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
 			body_module.add_child(orbit_module)
 		
 		properties_module = Module("@Properties")
 		if scale != 1:
 			properties_module.add_parameter("radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
-				properties_module.add_parameter("rotationPeriod = %f" % body.rot)
+				properties_module.add_parameter("rotationPeriod = %s" % format_float(body.rot))
 		body_module.add_child(properties_module)
 		
 		if body.name == "Kerbin":
@@ -67,10 +67,10 @@ def generate_remote_tech_compatability_config(scale, compatability_path):
 	main_module = Module("@PART[*]:HAS[@MODULE[ModuleRTAntenna],!MODULE[ModuleCommand]]:NEEDS[RemoteTech]:Final")
 	
 	antenna_module = Module("@MODULE[ModuleRTAntenna]")
-	antenna_module.add_parameter("@Mode0DishRange *= %f" % scale)
-	antenna_module.add_parameter("@Mode1DishRange *= %f" % scale)
-	antenna_module.add_parameter("@Mode0OmniRange *= %f" % scale)
-	antenna_module.add_parameter("@Mode1OmniRange *= %f" % scale)
+	antenna_module.add_parameter("@Mode0DishRange *= %s" % format_float(scale))
+	antenna_module.add_parameter("@Mode1DishRange *= %s" % format_float(scale))
+	antenna_module.add_parameter("@Mode0OmniRange *= %s" % format_float(scale))
+	antenna_module.add_parameter("@Mode1OmniRange *= %s" % format_float(scale))
 	
 	main_module.add_child(antenna_module)
 	main_module.write_to_file(config_path)

@@ -1,5 +1,8 @@
 import os
 
+def format_float(num):
+	return ('%f' % num).rstrip('0').rstrip('.')
+
 class Module(object):
 	def __init__(self, header):
 		self.header = header
