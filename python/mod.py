@@ -49,7 +49,7 @@ def generate_kopernicus_config(scale, mod_path):
 			body_module.add_child(orbit_module)
 		
 		properties_module = Module("@Properties")
-		if scale != 1:
+		if scale != 1 and not body.is_potato:
 			properties_module.add_parameter("radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
 				properties_module.add_parameter("rotationPeriod = %s" % format_float(body.rot))

@@ -3,10 +3,11 @@ from physics import Vector
 
 
 class Body(object):
-	def __init__(self, name, r, rot="TL"):
+	def __init__(self, name, r, rot="TL", is_potato=False):
 		self.name = name
 		self.r = r
 		self.rot = rot
+		self.is_potato = is_potato
 		
 	@property
 	def is_tidally_locked(self):
@@ -16,14 +17,15 @@ class Body(object):
 			return False
 		
 	def rescale(self, scale):
-		self.r *= scale
-		if not self.is_tidally_locked:
-			self.rot = self.rot * scale / math.sqrt(scale)
+		if not self.is_potato:
+			self.r *= scale
+			if not self.is_tidally_locked:
+				self.rot = self.rot * scale / math.sqrt(scale)
 
 
 class PlanetaryBody(Body):
-	def __init__(self, name, r, a, i, o, w, rot="TL"):
-		super(PlanetaryBody, self).__init__(name=name, rot=rot, r=r)
+	def __init__(self, name, r, a, i, o, w, *args, **kwargs):
+		super(PlanetaryBody, self).__init__(name=name, r=r, *args, **kwargs)
 		self.a = a
 		self.i = i
 		self.o = o
@@ -138,7 +140,7 @@ bodies = [
 	Body(name="Sun", r=261600000, rot=432000),
 	PlanetaryBody(name="Moho", r=250000, a=5263138304, i=7, o=70, w=15, rot=1210000),
 	PlanetaryBody(name="Eve", r=700000, a=9832684544, i=2.1, o=15, w=0, rot=80500),
-	PlanetaryBody(name="Gilly", r=13000, a=31500000, i=12, o=80, w=10, rot=28255),
+	PlanetaryBody(name="Gilly", r=13000, a=31500000, i=12, o=80, w=10, rot=28255, is_potato=True),
 	PlanetaryBody(name="Kerbin", r=600000, a=13599840256, i=0, o=0, w=0, rot=21599.912014540),
 	PlanetaryBody(name="Mun", r=200000, a=12000000, i=5.145, o=0, w=0),
 	PlanetaryBody(name="Minmus", r=60000, a=47000000, i=0, o=78, w=38, rot=40400),
@@ -149,7 +151,7 @@ bodies = [
 	PlanetaryBody(name="Laythe", r=500000, a=27184000, i=0, o=0, w=0),
 	PlanetaryBody(name="Vall", r=300000, a=43152000, i=0, o=0, w=0),
 	PlanetaryBody(name="Tylo", r=600000, a=68500000, i=0.025, o=0, w=0),
-	PlanetaryBody(name="Bop", r=65000, a=128500000, i=15, o=10, w=25),
-	PlanetaryBody(name="Pol", r=44000, a=179890000, i=4.25, o=2, w=15),
+	PlanetaryBody(name="Bop", r=65000, a=128500000, i=15, o=10, w=25, is_potato=True),
+	PlanetaryBody(name="Pol", r=44000, a=179890000, i=4.25, o=2, w=15, is_potato=True),
 	PlanetaryBody(name="Eeloo", r=210000, a=90118820000, i=6.15, o=50, w=260, rot=19460),
 ]
