@@ -113,7 +113,11 @@ def generate_kopernicus_config(scale, mod_path):
 			properties_module = Module("@Properties")
 			properties_module.add_parameter("radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
-				properties_module.add_parameter("rotationPeriod = %s" % format_float(body.rot))
+				if body.name == "Kerbin":
+					rot_speed = round(body.rot / 7200.0) * 7200
+				else:
+					rot_speed = body.rot
+				properties_module.add_parameter("rotationPeriod = %s" % format_float(rot_speed))
 			body_module.add_child(properties_module)
 		
 		if body.name == "Kerbin":
