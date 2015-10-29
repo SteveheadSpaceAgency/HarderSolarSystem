@@ -6,7 +6,6 @@ from bodies import PlanetaryBody, bodies, opm_bodies
 base_directory_format = "%sx"
 mod_name_format = "HarderSolarSystem-%sx"
 kopernicus_config_name = "HSSKopernicus.cfg"
-remote_tech_compatability_config_name = "RemoteTech_HSS.cfg"
 opm_compatability_config_name = "OuterPlanetsMod_HSS.cfg"
 game_data_directory = "GameData"
 compatability_directory = "Compatability"
@@ -16,18 +15,27 @@ def generate_mod(scale, directory):
 	base_path = os.path.join(directory, base_directory_format % format_float(scale))
 	game_data_path = os.path.join(base_path, game_data_directory)
 	mod_path = os.path.join(game_data_path, mod_name_format % format_float(scale))
+	static_path = os.path.join(os.path.dirname(directory), "static")
 	if not os.path.exists(mod_path):
 		os.makedirs(mod_path)
 	generate_kopernicus_config(scale, mod_path)
-	generate_compatability_configs(scale, mod_path)
+	generate_compatability_configs(scale, mod_path, static_path)
 
-def generate_compatability_configs(scale, mod_path):
+def generate_compatability_configs(scale, mod_path, static_path):
 	compatability_path = os.path.join(mod_path, compatability_directory)
 	if not os.path.exists(compatability_path):
 		os.makedirs(compatability_path)
-	if scale != 1:
-		generate_remote_tech_compatability_config(scale, compatability_path)
+	generate_remote_tech_settings_config(scale, compatability_path, static_path)
 	generate_opm_compatability_config(scale, compatability_path)
+	
+def generate_remote_tech_settings_config(scale, compatability_path, static_path):
+	original_file = os.path.join(static_path, "RemoteTech_Settings.cfg")
+	new_file = os.path.join(compatability_path, "RemoteTech_Settings.cfg")
+	with open(original_file, 'r') as f:
+		original_file_data = f.read()
+	new_file_data = original_file_data.replace("RangeMultiplier = 1", "RangeMultiplier = %s" % format_float(scale))
+	with open(new_file, 'w') as f:
+		f.write(new_file_data)
 	
 def generate_opm_compatability_config(scale, compatability_path):
 	config_path = os.path.join(compatability_path, opm_compatability_config_name)
@@ -115,20 +123,6 @@ def generate_kopernicus_config(scale, mod_path):
 	
 	main_module.write_to_file(config_path)
 		
-def generate_remote_tech_compatability_config(scale, compatability_path):
-	config_path = os.path.join(compatability_path, remote_tech_compatability_config_name)
-	main_module = Module("@PART[*]:HAS[@MODULE[ModuleRTAntenna],!MODULE[ModuleCommand]]:NEEDS[RemoteTech]:Final")
-	
-	antenna_module = Module("@MODULE[ModuleRTAntenna]")
-	antenna_module.add_parameter("@Mode0DishRange *= %s" % format_float(scale))
-	antenna_module.add_parameter("@Mode1DishRange *= %s" % format_float(scale))
-	antenna_module.add_parameter("@Mode0OmniRange *= %s" % format_float(scale))
-	antenna_module.add_parameter("@Mode1OmniRange *= %s" % format_float(scale))
-	
-	main_module.add_child(antenna_module)
-	main_module.write_to_file(config_path)
-	
-
 def generate_space_center_module(scale):
 	ksc_module = Module("SpaceCenter")
 	ksc_module.add_parameter("latitude = 28.608389")
