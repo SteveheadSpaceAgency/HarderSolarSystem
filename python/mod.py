@@ -6,9 +6,9 @@ from bodies import PlanetaryBody, bodies, opm_bodies
 base_directory_format = "%sx"
 mod_name_format = "HarderSolarSystem-%sx"
 kopernicus_config_name = "HSSKopernicus.cfg"
-opm_compatability_config_name = "OuterPlanetsMod_HSS.cfg"
+opm_compatibility_config_name = "OuterPlanetsMod_HSS.cfg"
 game_data_directory = "GameData"
-compatability_directory = "Compatability"
+compatibility_directory = "Compatibility"
 axial_tilt = 23.4392811
 
 def generate_mod(scale, directory):
@@ -19,26 +19,26 @@ def generate_mod(scale, directory):
 	if not os.path.exists(mod_path):
 		os.makedirs(mod_path)
 	generate_kopernicus_config(scale, mod_path)
-	generate_compatability_configs(scale, mod_path, static_path)
+	generate_compatibility_configs(scale, mod_path, static_path)
 
-def generate_compatability_configs(scale, mod_path, static_path):
-	compatability_path = os.path.join(mod_path, compatability_directory)
-	if not os.path.exists(compatability_path):
-		os.makedirs(compatability_path)
-	generate_remote_tech_settings_config(scale, compatability_path, static_path)
-	generate_opm_compatability_config(scale, compatability_path)
+def generate_compatibility_configs(scale, mod_path, static_path):
+	compatibility_path = os.path.join(mod_path, compatibility_directory)
+	if not os.path.exists(compatibility_path):
+		os.makedirs(compatibility_path)
+	generate_remote_tech_settings_config(scale, compatibility_path, static_path)
+	generate_opm_compatibility_config(scale, compatibility_path)
 	
-def generate_remote_tech_settings_config(scale, compatability_path, static_path):
+def generate_remote_tech_settings_config(scale, compatibility_path, static_path):
 	original_file = os.path.join(static_path, "RemoteTech_Settings.cfg")
-	new_file = os.path.join(compatability_path, "RemoteTech_Settings.cfg")
+	new_file = os.path.join(compatibility_path, "RemoteTech_Settings.cfg")
 	with open(original_file, 'r') as f:
 		original_file_data = f.read()
 	new_file_data = original_file_data.replace("RangeMultiplier = 1", "RangeMultiplier = %s" % format_float(scale))
 	with open(new_file, 'w') as f:
 		f.write(new_file_data)
 	
-def generate_opm_compatability_config(scale, compatability_path):
-	config_path = os.path.join(compatability_path, opm_compatability_config_name)
+def generate_opm_compatibility_config(scale, compatibility_path):
+	config_path = os.path.join(compatibility_path, opm_compatibility_config_name)
 	this_bodies = copy.deepcopy(opm_bodies)
 	
 	main_module = Module("@Kopernicus:AFTER[OPM]")
