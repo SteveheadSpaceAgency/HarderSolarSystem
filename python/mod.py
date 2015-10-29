@@ -65,7 +65,7 @@ def generate_opm_compatability_config(scale, compatability_path):
 			rings_module = Module("@Rings")
 			ring_module = Module("@Ring")
 			ring_module.add_parameter("@outerRadius *= %s" % rings_scale)
-			ring_module.add_parameter("@innerRadius  *= %s" % rings_scale)
+			ring_module.add_parameter("@innerRadius *= %s" % rings_scale)
 			rings_module.add_child(ring_module)
 			body_module.add_child(rings_module)
 		
