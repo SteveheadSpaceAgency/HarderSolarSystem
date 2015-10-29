@@ -1,4 +1,4 @@
-import os, copy, math
+import os, copy, math, shutil
 from config import Module, format_float
 from bodies import PlanetaryBody, bodies, opm_bodies
 
@@ -26,6 +26,7 @@ def generate_compatibility_configs(scale, mod_path, static_path):
 	if not os.path.exists(compatibility_path):
 		os.makedirs(compatibility_path)
 	generate_remote_tech_settings_config(scale, compatibility_path, static_path)
+	copy_contract_bug_fix_config(compatibility_path, static_path)
 	generate_opm_compatibility_config(scale, compatibility_path)
 	
 def generate_remote_tech_settings_config(scale, compatibility_path, static_path):
@@ -36,6 +37,12 @@ def generate_remote_tech_settings_config(scale, compatibility_path, static_path)
 	new_file_data = original_file_data.replace("RangeMultiplier = 1", "RangeMultiplier = %s" % format_float(scale))
 	with open(new_file, 'w') as f:
 		f.write(new_file_data)
+		
+def copy_contract_bug_fix_config(compatibility_path, static_path):
+	original_file = os.path.join(static_path, "Contract_Bug_Workaround.cfg")
+	new_file = os.path.join(compatibility_path, "Contract_Bug_Workaround.cfg")
+	shutil.copyfile(original_file, new_file)
+	
 	
 def generate_opm_compatibility_config(scale, compatibility_path):
 	config_path = os.path.join(compatibility_path, opm_compatibility_config_name)
