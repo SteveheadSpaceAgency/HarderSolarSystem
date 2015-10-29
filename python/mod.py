@@ -47,9 +47,10 @@ def generate_opm_compatability_config(scale, compatability_path):
 			orbit_module = Module("@Orbit")
 			if scale != 1:
 				orbit_module.add_parameter("@semiMajorAxis = %d" % round(body.a))
-			orbit_module.add_parameter("@inclination = %s" % format_float(body.i))
-			orbit_module.add_parameter("@longitudeOfAscendingNode = %s" % format_float(body.o))
-			orbit_module.add_parameter("@argumentOfPeriapsis = %s" % format_float(body.w))
+			if not body.no_rotate:
+				orbit_module.add_parameter("@inclination = %s" % format_float(body.i))
+				orbit_module.add_parameter("@longitudeOfAscendingNode = %s" % format_float(body.o))
+				orbit_module.add_parameter("@argumentOfPeriapsis = %s" % format_float(body.w))
 			body_module.add_child(orbit_module)
 			
 		if scale != 1 and not body.is_potato:
@@ -94,9 +95,10 @@ def generate_kopernicus_config(scale, mod_path):
 			orbit_module = Module("@Orbit")
 			if scale != 1:
 				orbit_module.add_parameter("semiMajorAxis = %d" % round(body.a))
-			orbit_module.add_parameter("inclination = %s" % format_float(body.i))
-			orbit_module.add_parameter("longitudeOfAscendingNode = %s" % format_float(body.o))
-			orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
+			if not body.no_rotate:
+				orbit_module.add_parameter("inclination = %s" % format_float(body.i))
+				orbit_module.add_parameter("longitudeOfAscendingNode = %s" % format_float(body.o))
+				orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
 			body_module.add_child(orbit_module)
 		
 		if scale != 1 and not body.is_potato:

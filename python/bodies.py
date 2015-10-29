@@ -25,18 +25,21 @@ class Body(object):
 
 
 class PlanetaryBody(Body):
-	def __init__(self, name, r, a, i, o, w, *args, **kwargs):
+	def __init__(self, name, r, a, i, o, w, no_rotate=False, *args, **kwargs):
 		super(PlanetaryBody, self).__init__(name=name, r=r, *args, **kwargs)
 		self.a = a
 		self.i = i
 		self.o = o
 		self.w = w
+		self.no_rotate=no_rotate
 		
 	def rescale(self, scale):
 		super(PlanetaryBody, self).rescale(scale)
 		self.a *= scale
 		
 	def rotate_orbit(self, x_rot=None, y_rot=None, z_rot=None):
+		if self.no_rotate:
+			return
 		r, v = self.get_unitless_state_vectors()
 		r.rotate(x_rot, y_rot, z_rot)
 		v.rotate(x_rot, y_rot, z_rot)
@@ -159,8 +162,8 @@ bodies = [
 
 opm_bodies = [
 	PlanetaryBody(name="Sarnus", r=5300000, a=125798522368, i=2.02, o=184, w=0, rot=28500, has_rings=True),
-	PlanetaryBody(name="Hale", r=6000, a=10488231, i=1, o=55, w=0, is_potato=True),
-	PlanetaryBody(name="Ovok", r=26000, a=12169413, i=1.5, o=55, w=0),
+	PlanetaryBody(name="Hale", r=6000, a=10488231, i=1, o=55, w=0, is_potato=True, no_rotate=True),
+	PlanetaryBody(name="Ovok", r=26000, a=12169413, i=1.5, o=55, w=0, no_rotate=True),
 	PlanetaryBody(name="Eeloo", r=210000, a=19105978, i=2.3, o=55, w=260),
 	PlanetaryBody(name="Slate", r=540000, a=42592946, i=2.3, o=55, w=0),
 	PlanetaryBody(name="Tekto", r=280000, a=97355304, i=9.4, o=55, w=0),	
