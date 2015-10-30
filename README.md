@@ -6,6 +6,7 @@ A set of Kopernicus configs that make the stock solar system more challenging. C
 * KSC moved to a new location that has a latitude of 28.608389° N.
 * Mun's inclination changed to 5.145° relative to Kerbin's orbit, like how the real Moon is. No more lunar/solar eclipses every Mun orbit.
 * Minmus's inclination changed to 0.5° relative to Kerbin's orbit. Changed so that it's inclination is not too similar to Mun's.
+* Rotation periods are adjusted based on scale.
 * Note: Potato moons do not scale with the various scales to retain their intended shape.
 
 ## Outer Planets Mod Compatibility
