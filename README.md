@@ -18,3 +18,10 @@ A set of Kopernicus configs that make the stock solar system more challenging. C
 * Added three Deep Space Network ground stations.
 * Added two short range stations to assist with launches.
 * Antennas and ground stations all scale with the varied scales available.
+
+### License
+Public domain.
+
+#### Thanks
+* Thanks to Paul Kingtiger for inspiration on several parts of this. Also, some compatibility came straight from KScale2.
+* Thanks to NathanKell's RSS for inspiring the axial tilt simulation.
