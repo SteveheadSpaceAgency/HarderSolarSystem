@@ -1,4 +1,4 @@
-# HarderSolarSystem
+# Harder Solar System
 A set of Kopernicus configs that make the stock solar system more challenging. Comes in several size scales: 1x (stock), 2x, 3x, 4x.
 
 ## Changes to Stock
