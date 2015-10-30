@@ -27,9 +27,9 @@ def generate_compatibility_configs(scale, mod_path, static_path):
 	if not os.path.exists(compatibility_path):
 		os.makedirs(compatibility_path)
 	generate_remote_tech_settings_config(scale, compatibility_path, static_path)
-	copy_contract_bug_fix_config(compatibility_path, static_path)
 	generate_opm_compatibility_config(scale, compatibility_path)
 	if scale != 1:
+		copy_contract_bug_fix_config(compatibility_path, static_path)
 		generate_eve_compatibility_config(scale, compatibility_path)
 	
 def generate_remote_tech_settings_config(scale, compatibility_path, static_path):
