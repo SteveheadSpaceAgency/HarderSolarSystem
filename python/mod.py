@@ -7,6 +7,7 @@ base_directory_format = "%sx"
 mod_name_format = "HarderSolarSystem-%sx"
 kopernicus_config_name = "HSSKopernicus.cfg"
 opm_compatibility_config_name = "OuterPlanetsMod_HSS.cfg"
+eve_compatibility_config_name = "EVE_HSS.cfg"
 game_data_directory = "GameData"
 compatibility_directory = "Compatibility"
 axial_tilt = 23.4392811
@@ -28,6 +29,8 @@ def generate_compatibility_configs(scale, mod_path, static_path):
 	generate_remote_tech_settings_config(scale, compatibility_path, static_path)
 	copy_contract_bug_fix_config(compatibility_path, static_path)
 	generate_opm_compatibility_config(scale, compatibility_path)
+	if scale != 1:
+		generate_eve_compatibility_config(scale, compatibility_path)
 	
 def generate_remote_tech_settings_config(scale, compatibility_path, static_path):
 	original_file = os.path.join(static_path, "RemoteTech_Settings.cfg")
@@ -37,6 +40,40 @@ def generate_remote_tech_settings_config(scale, compatibility_path, static_path)
 	new_file_data = original_file_data.replace("RangeMultiplier = 1", "RangeMultiplier = %s" % format_float(scale))
 	with open(new_file, 'w') as f:
 		f.write(new_file_data)
+		
+def generate_eve_compatibility_config(scale, compatibility_path):
+	config_path = os.path.join(compatibility_path, eve_compatibility_config_name)
+	cloud_layer_pack_module = Module("@CLOUD_LAYER_PACK")
+	kerbin_cloud_layer = Module("@CLOUD_LAYER:HAS[@DEFAULTS:HAS[#body[Kerbin]]]")
+	kerbin_defaults = Module("@DEFAULTS")
+	kerbin_main_texture = Module("@main_texture")
+	kerbin_main_texture_speed = Module("@speed")
+	kerbin_main_texture_speed.add_parameter("@x /= %s" % format_float(5 * scale))
+	kerbin_main_texture.add_child(kerbin_main_texture_speed)
+	kerbin_defaults.add_child(kerbin_main_texture)
+	kerbin_detail_texture = Module("@detail_texture")
+	kerbin_detail_texture_speed = Module("@speed")
+	kerbin_detail_texture_speed.add_parameter("@x /= %s" % format_float(5 * scale))
+	kerbin_detail_texture.add_child(kerbin_detail_texture_speed)
+	kerbin_defaults.add_child(kerbin_detail_texture)
+	kerbin_cloud_layer.add_child(kerbin_defaults)
+	cloud_layer_pack_module.add_child(kerbin_cloud_layer)
+	laythe_cloud_layer = Module("@CLOUD_LAYER:HAS[@DEFAULTS:HAS[#body[Laythe]]]")
+	laythe_defaults = Module("@DEFAULTS")
+	laythe_main_texture = Module("@main_texture")
+	laythe_main_texture_speed = Module("@speed")
+	laythe_main_texture_speed.add_parameter("@x /= %s" % format_float(scale))
+	laythe_main_texture.add_child(laythe_main_texture_speed)
+	laythe_defaults.add_child(laythe_main_texture)
+	laythe_detail_texture = Module("@detail_texture")
+	laythe_detail_texture_speed = Module("@speed")
+	laythe_detail_texture_speed.add_parameter("@x /= %s" % format_float(scale))
+	laythe_detail_texture.add_child(laythe_detail_texture_speed)
+	laythe_defaults.add_child(laythe_detail_texture)
+	laythe_cloud_layer.add_child(laythe_defaults)
+	cloud_layer_pack_module.add_child(laythe_cloud_layer)
+	cloud_layer_pack_module.write_to_file(config_path)
+	
 		
 def copy_contract_bug_fix_config(compatibility_path, static_path):
 	original_file = os.path.join(static_path, "Contract_Bug_Workaround.cfg")
