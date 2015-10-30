@@ -37,7 +37,12 @@ def generate_remote_tech_settings_config(scale, compatibility_path, static_path)
 	new_file = os.path.join(compatibility_path, "RemoteTech_Settings.cfg")
 	with open(original_file, 'r') as f:
 		original_file_data = f.read()
-	new_file_data = original_file_data.replace("RangeMultiplier = 1", "RangeMultiplier = %s" % format_float(scale))
+	new_file_data = original_file_data
+	if scale != 1:
+		new_file_data = original_file_data.replace("RangeMultiplier = 1", "RangeMultiplier = %s" % format_float(scale))
+		new_file_data = new_file_data.replace("7.5E+07", format_float(75000000 * scale))
+		new_file_data = new_file_data.replace("1E+12", format_float(1000000000000 * scale))
+		new_file_data = new_file_data.replace("1E+6", format_float(1000000 * scale))
 	with open(new_file, 'w') as f:
 		f.write(new_file_data)
 		
