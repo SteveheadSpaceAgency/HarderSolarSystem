@@ -28,6 +28,7 @@ def generate_compatibility_configs(scale, mod_path, static_path):
 		os.makedirs(compatibility_path)
 	generate_remote_tech_settings_config(scale, compatibility_path, static_path)
 	generate_opm_compatibility_config(scale, compatibility_path)
+	copy_version_file(mod_path, static_path)
 	if scale != 1:
 		copy_contract_bug_fix_config(compatibility_path, static_path)
 		generate_eve_compatibility_config(scale, compatibility_path)
@@ -83,6 +84,12 @@ def generate_eve_compatibility_config(scale, compatibility_path):
 def copy_contract_bug_fix_config(compatibility_path, static_path):
 	original_file = os.path.join(static_path, "Contract_Bug_Workaround.cfg")
 	new_file = os.path.join(compatibility_path, "Contract_Bug_Workaround.cfg")
+	shutil.copyfile(original_file, new_file)
+
+
+def copy_version_file(mod_path, static_path,):
+	original_file = os.path.join(static_path, "HarderSolarSystem.version")
+	new_file = os.path.join(mod_path, "HarderSolarSystem.version")
 	shutil.copyfile(original_file, new_file)
 	
 	
