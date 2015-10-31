@@ -25,3 +25,7 @@ Public domain.
 #### Thanks
 * Thanks to Paul Kingtiger for inspiration on several parts of this. Also, some compatibility came straight from KScale2.
 * Thanks to NathanKell's RSS for inspiring the axial tilt simulation.
+
+### Changelog
+* **v1.0.1** - 10/31/15 - Small fix for scaling a RT ground station antenna properly.
+* **v1.0.0** - 10/30/15 - Initial release.
