@@ -107,23 +107,25 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 		if scale != 1:
 			body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
+		orbit_module = Module("@Orbit")
 		if isinstance(body, PlanetaryBody):
 			body.rotate_orbit(x_rot=axial_tilt)
-			orbit_module = Module("@Orbit")
 			if scale != 1:
 				orbit_module.add_parameter("@semiMajorAxis = %d" % round(body.a))
 			if not body.no_rotate:
 				orbit_module.add_parameter("@inclination = %s" % format_float(body.i))
 				orbit_module.add_parameter("@longitudeOfAscendingNode = %s" % format_float(body.o))
 				orbit_module.add_parameter("@argumentOfPeriapsis = %s" % format_float(body.w))
+		if not orbit_module.is_empty:
 			body_module.add_child(orbit_module)
-			
+		
+		properties_module = Module("@Properties")
 		if scale != 1 and not body.is_potato:
-			properties_module = Module("@Properties")
 			properties_module.add_parameter("-mass = dummy")
 			properties_module.add_parameter("@radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
 				properties_module.add_parameter("@rotationPeriod = %s" % format_float(body.rot))
+		if not properties_module.is_empty:
 			body_module.add_child(properties_module)
 		
 		if scale != 1 and body.has_rings:
@@ -135,7 +137,8 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 			rings_module.add_child(ring_module)
 			body_module.add_child(rings_module)
 		
-		main_module.add_child(body_module)
+		if not body_module.is_empty:
+			main_module.add_child(body_module)
 	
 	main_module.write_to_file(config_path)
 
@@ -156,6 +159,7 @@ def generate_kopernicus_config(scale, mod_path):
 		if scale != 1:
 			body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
+		orbit_module = Module("@Orbit")
 		if isinstance(body, PlanetaryBody):
 			body.rotate_orbit(x_rot=axial_tilt)
 			orbit_module = Module("@Orbit")
@@ -165,10 +169,11 @@ def generate_kopernicus_config(scale, mod_path):
 				orbit_module.add_parameter("inclination = %s" % format_float(body.i))
 				orbit_module.add_parameter("longitudeOfAscendingNode = %s" % format_float(body.o))
 				orbit_module.add_parameter("argumentOfPeriapsis = %s" % format_float(body.w))
+		if not orbit_module.is_empty:
 			body_module.add_child(orbit_module)
 		
+		properties_module = Module("@Properties")
 		if scale != 1 and not body.is_potato:
-			properties_module = Module("@Properties")
 			properties_module.add_parameter("radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
 				if body.name == "Kerbin":
@@ -176,12 +181,14 @@ def generate_kopernicus_config(scale, mod_path):
 				else:
 					rot_speed = body.rot
 				properties_module.add_parameter("rotationPeriod = %s" % format_float(rot_speed))
+		if not properties_module.is_empty:
 			body_module.add_child(properties_module)
 		
 		if body.name == "Kerbin":
 			body_module.add_child(generate_space_center_module(scale))
 		
-		main_module.add_child(body_module)
+		if not body_module.is_empty:
+			main_module.add_child(body_module)
 	
 	main_module.write_to_file(config_path)
 		

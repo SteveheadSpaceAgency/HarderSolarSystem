@@ -9,6 +9,14 @@ class Module(object):
 		self.parameters = []
 		self.children = []
 		self.parent = None
+	
+	@property
+	def is_empty(self):
+		if len(self.parameters) > 0:
+			return False
+		if len(self.children) > 0:
+			return False
+		return True
 		
 	def add_parameter(self, parameter):
 		self.parameters.append(parameter)
