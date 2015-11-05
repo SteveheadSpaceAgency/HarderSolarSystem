@@ -176,5 +176,5 @@ opm_bodies = [
 	PlanetaryBody(name="Neidon", r=2145000, a=409355191706, i=1.27, o=259, w=0, rot=40250, gee_ASL=1.055),
 	PlanetaryBody(name="Thatmo", r=286000, a=32300895, i=161.1, o=66, w=0),
 	PlanetaryBody(name="Nissee", r=30000, a=487743514, i=29.56, o=66, w=0),
-	PlanetaryBody(name="Plock", r=189000, a=535833706086, i=6.15, o=260, w=50, rot=106300),
+	PlanetaryBody(name="Plock", r=189000, a=535833706086, i=17, o=260, w=50, rot=106300),
 ]
