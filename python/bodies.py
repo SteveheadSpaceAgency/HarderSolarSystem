@@ -3,12 +3,13 @@ from physics import Vector
 
 
 class Body(object):
-	def __init__(self, name, r, rot="TL", is_potato=False, has_rings=False):
+	def __init__(self, name, r, rot="TL", is_potato=False, has_rings=False, gee_ASL=None):
 		self.name = name
 		self.r = r
 		self.rot = rot
 		self.is_potato = is_potato
 		self.has_rings = has_rings
+		self.gee_ASL = gee_ASL
 		
 	@property
 	def is_tidally_locked(self):
