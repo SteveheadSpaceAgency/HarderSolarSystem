@@ -202,7 +202,7 @@ def generate_space_center_module(scale):
 	ksc_module.add_parameter("longitude = -19.7")
 	ksc_module.add_parameter("lodvisibleRangeMult = 6")
 	ksc_module.add_parameter("repositionRadiusOffset = 53")
-	ksc_module.add_parameter("reorientFinalAngle = 305")
+	ksc_module.add_parameter("reorientFinalAngle = 289.75")
 	ksc_module.add_parameter("decalLatitude = 28.608389")
 	ksc_module.add_parameter("decalLongitude = -19.7")
 	ksc_module.add_parameter("heightMapDeformity = 80")
