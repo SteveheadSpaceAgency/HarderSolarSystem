@@ -126,7 +126,7 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 			if not body.is_tidally_locked:
 				properties_module.add_parameter("@rotationPeriod = %s" % format_float(body.rot))
 		if body.gee_ASL is not None:
-			properties_module.add_parameter("geeASL = %s" % format_float(body.gee_ASL))
+			properties_module.add_parameter("@geeASL = %s" % format_float(body.gee_ASL))
 		if not properties_module.is_empty:
 			body_module.add_child(properties_module)
 		
