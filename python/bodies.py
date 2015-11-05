@@ -151,14 +151,14 @@ bodies = [
 	PlanetaryBody(name="Minmus", r=60000, a=47000000, i=0, o=78, w=38, rot=40400),
 	PlanetaryBody(name="Duna", r=320000, a=20726155264, i=0.06, o=135.5, w=0, rot=65517.859375000),
 	PlanetaryBody(name="Ike", r=130000, a=3200000, i=0.2, o=0, w=0),
-	PlanetaryBody(name="Dres", r=138000, a=40839348203, i=5, o=280, w=90, rot=34800),
+	PlanetaryBody(name="Dres", r=138000, a=40839348203, i=10.5, o=280, w=90, rot=34800),
 	PlanetaryBody(name="Jool", r=6000000, a=68773560320, i=1.304, o=52, w=0, rot=36000, gee_ASL = 2.304),
 	PlanetaryBody(name="Laythe", r=500000, a=27184000, i=0, o=0, w=0),
 	PlanetaryBody(name="Vall", r=300000, a=43152000, i=0, o=0, w=0),
 	PlanetaryBody(name="Tylo", r=600000, a=68500000, i=0.025, o=0, w=0),
 	PlanetaryBody(name="Bop", r=65000, a=128500000, i=15, o=10, w=25, is_potato=True),
 	PlanetaryBody(name="Pol", r=44000, a=179890000, i=4.25, o=2, w=15, is_potato=True),
-	PlanetaryBody(name="Eeloo", r=210000, a=90118820000, i=6.15, o=50, w=260, rot=19460),
+	PlanetaryBody(name="Eeloo", r=210000, a=90118820000, i=17, o=50, w=260, rot=19460),
 ]
 
 opm_bodies = [
