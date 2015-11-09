@@ -3,13 +3,14 @@ from physics import Vector
 
 
 class Body(object):
-	def __init__(self, name, r, rot="TL", is_potato=False, has_rings=False, gee_ASL=None):
+	def __init__(self, name, r, rot="TL", is_potato=False, has_rings=False, gee_ASL=None, high_space_alt=None):
 		self.name = name
 		self.r = r
 		self.rot = rot
 		self.is_potato = is_potato
 		self.has_rings = has_rings
 		self.gee_ASL = gee_ASL
+		self.high_space_alt = high_space_alt
 		
 	@property
 	def is_tidally_locked(self):
@@ -23,6 +24,8 @@ class Body(object):
 			self.r *= scale
 			if not self.is_tidally_locked:
 				self.rot = self.rot * scale / math.sqrt(scale)
+			if self.high_space_alt is not None:
+				self.high_space_alt *= scale
 
 
 class PlanetaryBody(Body):
@@ -142,30 +145,30 @@ class PlanetaryBody(Body):
 
 
 bodies = [
-	Body(name="Sun", r=261600000, rot=432000),
-	PlanetaryBody(name="Moho", r=250000, a=5263138304, i=7, o=70, w=15, rot=1210000),
-	PlanetaryBody(name="Eve", r=700000, a=9832684544, i=2.1, o=15, w=0, rot=80500),
-	PlanetaryBody(name="Gilly", r=13000, a=31500000, i=12, o=80, w=10, rot=28255, is_potato=True),
-	PlanetaryBody(name="Kerbin", r=600000, a=13599840256, i=0, o=0, w=0, rot=21599.912014540),
-	PlanetaryBody(name="Mun", r=200000, a=12000000, i=5.145, o=0, w=0),
-	PlanetaryBody(name="Minmus", r=60000, a=47000000, i=0, o=78, w=38, rot=40400),
-	PlanetaryBody(name="Duna", r=320000, a=20726155264, i=0.06, o=135.5, w=0, rot=65517.859375000),
-	PlanetaryBody(name="Ike", r=130000, a=3200000, i=0.2, o=0, w=0),
-	PlanetaryBody(name="Dres", r=138000, a=40839348203, i=10.5, o=280, w=90, rot=34800),
-	PlanetaryBody(name="Jool", r=6000000, a=68773560320, i=1.304, o=52, w=0, rot=36000, gee_ASL = 2.304),
-	PlanetaryBody(name="Laythe", r=500000, a=27184000, i=0, o=0, w=0),
-	PlanetaryBody(name="Vall", r=300000, a=43152000, i=0, o=0, w=0),
-	PlanetaryBody(name="Tylo", r=600000, a=68500000, i=0.025, o=0, w=0),
-	PlanetaryBody(name="Bop", r=65000, a=128500000, i=15, o=10, w=25, is_potato=True),
-	PlanetaryBody(name="Pol", r=44000, a=179890000, i=4.25, o=2, w=15, is_potato=True),
-	PlanetaryBody(name="Eeloo", r=210000, a=90118820000, i=17, o=50, w=260, rot=19460),
+	Body(name="Sun", r=261600000, rot=432000, high_space_alt=1000000000),
+	PlanetaryBody(name="Moho", r=250000, a=5263138304, i=7, o=70, w=15, rot=1210000, high_space_alt=80000),
+	PlanetaryBody(name="Eve", r=700000, a=9832684544, i=2.1, o=15, w=0, rot=80500, high_space_alt=400000),
+	PlanetaryBody(name="Gilly", r=13000, a=31500000, i=12, o=80, w=10, rot=28255, is_potato=True, high_space_alt=6000),
+	PlanetaryBody(name="Kerbin", r=600000, a=13599840256, i=0, o=0, w=0, rot=21599.912014540, high_space_alt=250000),
+	PlanetaryBody(name="Mun", r=200000, a=12000000, i=5.145, o=0, w=0, high_space_alt=60000),
+	PlanetaryBody(name="Minmus", r=60000, a=47000000, i=0, o=78, w=38, rot=40400, high_space_alt=30000),
+	PlanetaryBody(name="Duna", r=320000, a=20726155264, i=0.06, o=135.5, w=0, rot=65517.859375000, high_space_alt=140000),
+	PlanetaryBody(name="Ike", r=130000, a=3200000, i=0.2, o=0, w=0, high_space_alt=50000),
+	PlanetaryBody(name="Dres", r=138000, a=40839348203, i=10.5, o=280, w=90, rot=34800, high_space_alt=25000),
+	PlanetaryBody(name="Jool", r=6000000, a=68773560320, i=1.304, o=52, w=0, rot=36000, gee_ASL = 2.304, high_space_alt=4000000),
+	PlanetaryBody(name="Laythe", r=500000, a=27184000, i=0, o=0, w=0, high_space_alt=200000),
+	PlanetaryBody(name="Vall", r=300000, a=43152000, i=0, o=0, w=0, high_space_alt=90000),
+	PlanetaryBody(name="Tylo", r=600000, a=68500000, i=0.025, o=0, w=0, high_space_alt=250000),
+	PlanetaryBody(name="Bop", r=65000, a=128500000, i=15, o=10, w=25, is_potato=True, high_space_alt=25000),
+	PlanetaryBody(name="Pol", r=44000, a=179890000, i=4.25, o=2, w=15, is_potato=True, high_space_alt=22000),
+	PlanetaryBody(name="Eeloo", r=210000, a=90118820000, i=17, o=50, w=260, rot=19460, high_space_alt=60000),
 ]
 
 opm_bodies = [
 	PlanetaryBody(name="Sarnus", r=5300000, a=125798522368, i=2.02, o=184, w=0, rot=28500, has_rings=True, gee_ASL=1.029),
 	PlanetaryBody(name="Hale", r=6000, a=10488231, i=1, o=55, w=0, is_potato=True, no_rotate=True),
 	PlanetaryBody(name="Ovok", r=26000, a=12169413, i=1.5, o=55, w=0, is_potato=True, no_rotate=True),
-	PlanetaryBody(name="Eeloo", r=210000, a=19105978, i=2.3, o=55, w=260, no_rotate=True),
+	PlanetaryBody(name="Eeloo", r=210000, a=19105978, i=2.3, o=55, w=260, no_rotate=True, high_space_alt=60000),
 	PlanetaryBody(name="Slate", r=540000, a=42592946, i=2.3, o=55, w=0),
 	PlanetaryBody(name="Tekto", r=280000, a=97355304, i=9.4, o=55, w=0),	
 	PlanetaryBody(name="Urlum", r=2177000, a=254317012787, i=0.64, o=61, w=0, rot=41000, has_rings=True, gee_ASL=0.8075),
@@ -176,5 +179,5 @@ opm_bodies = [
 	PlanetaryBody(name="Neidon", r=2145000, a=409355191706, i=1.27, o=259, w=0, rot=40250, gee_ASL=1.055),
 	PlanetaryBody(name="Thatmo", r=286000, a=32300895, i=161.1, o=66, w=0),
 	PlanetaryBody(name="Nissee", r=30000, a=487743514, i=29.56, o=66, w=0),
-	PlanetaryBody(name="Plock", r=189000, a=535833706086, i=17, o=260, w=50, rot=106300),
+	PlanetaryBody(name="Plock", r=189000, a=535833706086, i=17, o=260, w=50, rot=106300, high_space_alt=90000),
 ]
