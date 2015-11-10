@@ -105,7 +105,7 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 		body_module = Module("@Body[%s]" % body.name)
 		
 		if scale != 1:
-			body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
+			body_module.add_parameter("%%cacheFile = %s/Cache/OPM/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
 		orbit_module = Module("@Orbit")
 		if isinstance(body, PlanetaryBody):
@@ -171,7 +171,7 @@ def generate_kopernicus_config(scale, mod_path):
 			body_module = Module("@Body[%s]:NEEDS[!OPM]" % body.name)
 		
 		if scale != 1:
-			body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
+			body_module.add_parameter("%%cacheFile = %s/Cache/Stock/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
 		orbit_module = Module("@Orbit")
 		if isinstance(body, PlanetaryBody):
