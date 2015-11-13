@@ -111,31 +111,31 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 		if isinstance(body, PlanetaryBody):
 			body.rotate_orbit(x_rot=axial_tilt)
 			if scale != 1:
-				orbit_module.add_parameter("@semiMajorAxis = %d" % round(body.a))
+				orbit_module.add_parameter("%%semiMajorAxis = %d" % round(body.a))
 			if not body.no_rotate:
-				orbit_module.add_parameter("@inclination = %s" % format_float(body.i))
-				orbit_module.add_parameter("@longitudeOfAscendingNode = %s" % format_float(body.o))
-				orbit_module.add_parameter("@argumentOfPeriapsis = %s" % format_float(body.w))
+				orbit_module.add_parameter("%%inclination = %s" % format_float(body.i))
+				orbit_module.add_parameter("%%longitudeOfAscendingNode = %s" % format_float(body.o))
+				orbit_module.add_parameter("%%argumentOfPeriapsis = %s" % format_float(body.w))
 		if not orbit_module.is_empty:
 			body_module.add_child(orbit_module)
 		
 		properties_module = Module("@Properties")
 		if scale != 1 and not body.is_potato:
 			properties_module.add_parameter("-mass = dummy")
-			properties_module.add_parameter("@radius = %d" % round(body.r))
+			properties_module.add_parameter("%%radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
-				properties_module.add_parameter("@rotationPeriod = %s" % format_float(body.rot))
+				properties_module.add_parameter("%%rotationPeriod = %s" % format_float(body.rot))
 		if body.gee_ASL is not None:
-			properties_module.add_parameter("@geeASL = %s" % format_float(body.gee_ASL))
+			properties_module.add_parameter("%%geeASL = %s" % format_float(body.gee_ASL))
 		if scale != 1 and not body.is_potato:
 			science_module = Module("@ScienceValues")
 			if body.high_space_alt is None:
-				science_module.add_parameter("@spaceAltitudeThreshold *= %s" % format_float(scale))
+				science_module.add_parameter("%%spaceAltitudeThreshold *= %s" % format_float(scale))
 			else:
 				science_module.add_parameter("%%spaceAltitudeThreshold = %s" % format_float(body.high_space_alt))
 			if body.is_gas_giant:
 				if body.high_flying_alt is None:
-					science_module.add_parameter("@flyingAltitudeThreshold *= %s" % format_float(scale))
+					science_module.add_parameter("%%flyingAltitudeThreshold *= %s" % format_float(scale))
 				else:
 					science_module.add_parameter("%%flyingAltitudeThreshold = %s" % format_float(body.high_flying_alt))
 			properties_module.add_child(science_module)
