@@ -105,28 +105,40 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 		body_module = Module("@Body[%s]" % body.name)
 		
 		if scale != 1:
-			body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
+			body_module.add_parameter("%%cacheFile = %s/Cache/OPM/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
 		orbit_module = Module("@Orbit")
 		if isinstance(body, PlanetaryBody):
 			body.rotate_orbit(x_rot=axial_tilt)
 			if scale != 1:
-				orbit_module.add_parameter("@semiMajorAxis = %d" % round(body.a))
+				orbit_module.add_parameter("%%semiMajorAxis = %d" % round(body.a))
 			if not body.no_rotate:
-				orbit_module.add_parameter("@inclination = %s" % format_float(body.i))
-				orbit_module.add_parameter("@longitudeOfAscendingNode = %s" % format_float(body.o))
-				orbit_module.add_parameter("@argumentOfPeriapsis = %s" % format_float(body.w))
+				orbit_module.add_parameter("%%inclination = %s" % format_float(body.i))
+				orbit_module.add_parameter("%%longitudeOfAscendingNode = %s" % format_float(body.o))
+				orbit_module.add_parameter("%%argumentOfPeriapsis = %s" % format_float(body.w))
 		if not orbit_module.is_empty:
 			body_module.add_child(orbit_module)
 		
 		properties_module = Module("@Properties")
 		if scale != 1 and not body.is_potato:
 			properties_module.add_parameter("-mass = dummy")
-			properties_module.add_parameter("@radius = %d" % round(body.r))
+			properties_module.add_parameter("%%radius = %d" % round(body.r))
 			if not body.is_tidally_locked:
-				properties_module.add_parameter("@rotationPeriod = %s" % format_float(body.rot))
+				properties_module.add_parameter("%%rotationPeriod = %s" % format_float(body.rot))
 		if body.gee_ASL is not None:
-			properties_module.add_parameter("geeASL = %s" % format_float(body.gee_ASL))
+			properties_module.add_parameter("%%geeASL = %s" % format_float(body.gee_ASL))
+		if scale != 1 and not body.is_potato:
+			science_module = Module("@ScienceValues")
+			if body.high_space_alt is None:
+				science_module.add_parameter("%%spaceAltitudeThreshold *= %s" % format_float(scale))
+			else:
+				science_module.add_parameter("%%spaceAltitudeThreshold = %s" % format_float(body.high_space_alt))
+			if body.is_gas_giant:
+				if body.high_flying_alt is None:
+					science_module.add_parameter("%%flyingAltitudeThreshold *= %s" % format_float(scale))
+				else:
+					science_module.add_parameter("%%flyingAltitudeThreshold = %s" % format_float(body.high_flying_alt))
+			properties_module.add_child(science_module)
 		if not properties_module.is_empty:
 			body_module.add_child(properties_module)
 		
@@ -159,7 +171,7 @@ def generate_kopernicus_config(scale, mod_path):
 			body_module = Module("@Body[%s]:NEEDS[!OPM]" % body.name)
 		
 		if scale != 1:
-			body_module.add_parameter("%%cacheFile = %s/Cache/%s.bin" % (mod_name_format % format_float(scale), body.name))
+			body_module.add_parameter("%%cacheFile = %s/Cache/Stock/%s.bin" % (mod_name_format % format_float(scale), body.name))
 		
 		orbit_module = Module("@Orbit")
 		if isinstance(body, PlanetaryBody):
@@ -185,6 +197,14 @@ def generate_kopernicus_config(scale, mod_path):
 				properties_module.add_parameter("rotationPeriod = %s" % format_float(rot_speed))
 		if body.gee_ASL is not None:
 			properties_module.add_parameter("geeASL = %s" % format_float(body.gee_ASL))
+		if scale != 1 and not body.is_potato:
+			science_module = Module("@ScienceValues")
+			if body.high_space_alt is not None:
+				science_module.add_parameter("spaceAltitudeThreshold = %s" % format_float(body.high_space_alt))
+			if body.is_gas_giant and body.high_flying_alt is not None:
+				science_module.add_parameter("flyingAltitudeThreshold = %s" % format_float(body.high_flying_alt))
+			properties_module.add_child(science_module)
+			
 		if not properties_module.is_empty:
 			body_module.add_child(properties_module)
 		
@@ -202,7 +222,7 @@ def generate_space_center_module(scale):
 	ksc_module.add_parameter("longitude = -19.7")
 	ksc_module.add_parameter("lodvisibleRangeMult = 6")
 	ksc_module.add_parameter("repositionRadiusOffset = 53")
-	ksc_module.add_parameter("reorientFinalAngle = 305")
+	ksc_module.add_parameter("reorientFinalAngle = 289.75")
 	ksc_module.add_parameter("decalLatitude = 28.608389")
 	ksc_module.add_parameter("decalLongitude = -19.7")
 	ksc_module.add_parameter("heightMapDeformity = 80")
