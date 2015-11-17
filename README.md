@@ -32,6 +32,7 @@ Public domain.
 * Thanks to NathanKell's RSS for inspiring the axial tilt simulation.
 
 ### Changelog
+* **v1.1.1** - 11/17/15 - Fix .version files for each scale. No change to configs.
 * **v1.1.0** - 11/13/15 - Increased gas giant masses. Increased inclinations for the "dwarf planets". High space science altitude threshold scales based on selected scale. Fixed runway orientation to be due East/West. Fixed Eeloo not scaling in OPM.
 * **v1.0.1** - 10/31/15 - Small fix for scaling a RT ground station antenna properly.
 * **v1.0.0** - 10/30/15 - Initial release.
