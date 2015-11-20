@@ -142,15 +142,6 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 		if not properties_module.is_empty:
 			body_module.add_child(properties_module)
 		
-		if scale != 1 and body.has_rings:
-			rings_scale = format_float(1.0 / scale)
-			rings_module = Module("@Rings")
-			ring_module = Module("@Ring")
-			ring_module.add_parameter("@outerRadius *= %s" % rings_scale)
-			ring_module.add_parameter("@innerRadius *= %s" % rings_scale)
-			rings_module.add_child(ring_module)
-			body_module.add_child(rings_module)
-		
 		if not body_module.is_empty:
 			main_module.add_child(body_module)
 	
