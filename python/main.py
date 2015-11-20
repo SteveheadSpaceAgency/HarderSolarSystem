@@ -3,7 +3,7 @@ from mod import generate_mod
 
 # settings
 output_directory_name = "output"
-scales_supported = [1, 2, 3, 4]
+scales_supported = [1, 2, 3, 4, 'generic']
 
 # directories
 script_directory = os.path.dirname(os.path.realpath(__file__))
