@@ -130,7 +130,7 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 		if scale != 1 and not body.is_potato:
 			science_module = Module("@ScienceValues")
 			if body.high_space_alt is None:
-				science_module.add_parameter("%%spaceAltitudeThreshold *= %s" % format_float(scale))
+				science_module.add_parameter("@spaceAltitudeThreshold *= %s" % format_float(scale))
 			else:
 				science_module.add_parameter("%%spaceAltitudeThreshold = %s" % format_float(body.high_space_alt))
 			if body.is_gas_giant:
