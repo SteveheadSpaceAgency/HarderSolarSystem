@@ -5,6 +5,8 @@ from bodies import PlanetaryBody, bodies, opm_bodies
 # settings
 base_directory_format = "%sx"
 mod_name_format = "HarderSolarSystem-%sx"
+generic_base_directory_format = "generic"
+generic_mod_name_format = "HarderSolarSystem-generic"
 kopernicus_config_name = "HSSKopernicus.cfg"
 opm_compatibility_config_name = "OuterPlanetsMod_HSS.cfg"
 eve_compatibility_config_name = "EVE_HSS.cfg"
@@ -13,9 +15,15 @@ compatibility_directory = "Compatibility"
 axial_tilt = 23.4392811
 
 def generate_mod(scale, directory):
-	base_path = os.path.join(directory, base_directory_format % format_float(scale))
+	if scale != 'generic':
+		base_path = os.path.join(directory, base_directory_format % format_float(scale))
+	else:
+		base_path = os.path.join(directory, generic_base_directory_format)
 	game_data_path = os.path.join(base_path, game_data_directory)
-	mod_path = os.path.join(game_data_path, mod_name_format % format_float(scale))
+	if scale != 'generic':
+		mod_path = os.path.join(game_data_path, mod_name_format % format_float(scale))
+	else:
+		mod_path = os.path.join(game_data_path, generic_mod_name_format)
 	static_path = os.path.join(os.path.dirname(directory), "static")
 	if not os.path.exists(mod_path):
 		os.makedirs(mod_path)
@@ -26,10 +34,11 @@ def generate_compatibility_configs(scale, mod_path, static_path):
 	compatibility_path = os.path.join(mod_path, compatibility_directory)
 	if not os.path.exists(compatibility_path):
 		os.makedirs(compatibility_path)
-	generate_remote_tech_settings_config(scale, compatibility_path, static_path)
-	generate_opm_compatibility_config(scale, compatibility_path)
+	if scale != 'generic':
+		generate_remote_tech_settings_config(scale, compatibility_path, static_path)
+		generate_opm_compatibility_config(scale, compatibility_path)
 	copy_version_file(mod_path, static_path)
-	if scale != 1:
+	if scale != 1 and scale != 'generic':
 		copy_contract_bug_fix_config(compatibility_path, static_path)
 		generate_eve_compatibility_config(scale, compatibility_path)
 	
@@ -146,10 +155,44 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 			main_module.add_child(body_module)
 	
 	main_module.write_to_file(config_path)
+	
+def generate_generic_config(config_path):
+	this_bodies = copy.deepcopy(bodies)
+	main_module = Module("@Kopernicus:FINAL")
+	
+	for body in this_bodies:
+		body_module = Module("@Body[%s]" % body.name)
+		
+		orbit_module = Module("@Orbit")
+		if isinstance(body, PlanetaryBody):
+			body.rotate_orbit(x_rot=axial_tilt)
+			orbit_module = Module("@Orbit")
+			if not body.no_rotate:
+				orbit_module.add_parameter("%%inclination = %s" % format_float(body.i))
+				orbit_module.add_parameter("%%longitudeOfAscendingNode = %s" % format_float(body.o))
+				orbit_module.add_parameter("%%argumentOfPeriapsis = %s" % format_float(body.w))
+		if not orbit_module.is_empty:
+			body_module.add_child(orbit_module)
+		
+		properties_module = Module("@Properties")
+		if body.gee_ASL is not None:
+			properties_module.add_parameter("-mass = dummy")
+			properties_module.add_parameter("geeASL = %s" % format_float(body.gee_ASL))
+		if not properties_module.is_empty:
+			body_module.add_child(properties_module)
+		
+		if not body_module.is_empty:
+			main_module.add_child(body_module)
+	
+	main_module.write_to_file(config_path)
+	
 
 def generate_kopernicus_config(scale, mod_path):
 	config_path = os.path.join(mod_path, kopernicus_config_name)
 	this_bodies = copy.deepcopy(bodies)
+	if scale == 'generic':
+		generate_generic_config(config_path)
+		return
 	
 	main_module = Module("@Kopernicus:AFTER[Kopernicus]")
 	
