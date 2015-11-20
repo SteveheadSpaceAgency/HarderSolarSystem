@@ -135,7 +135,7 @@ def generate_opm_compatibility_config(scale, compatibility_path):
 				science_module.add_parameter("%%spaceAltitudeThreshold = %s" % format_float(body.high_space_alt))
 			if body.is_gas_giant:
 				if body.high_flying_alt is None:
-					science_module.add_parameter("%%flyingAltitudeThreshold *= %s" % format_float(scale))
+					science_module.add_parameter("@flyingAltitudeThreshold *= %s" % format_float(scale))
 				else:
 					science_module.add_parameter("%%flyingAltitudeThreshold = %s" % format_float(body.high_flying_alt))
 			properties_module.add_child(science_module)
